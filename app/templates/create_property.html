@@ -1,10 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+{% block css %}
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="header-title">
+        <h1>Add New Property</h1>
+    </div>
+    <div class="card form-container">
+        <form action="" method="post" enctype="multipart/form-data" class="p-3 needs-validation" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.property_name.label(class="form-label") }}
+            {{ form.property_name(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control") }}
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form.number_of_rooms.label(class="form-label") }}
+                {{ form.number_of_rooms(class="form-control") }}
+            </div>
+            <div class="col-md-6">
+                {{ form.number_of_bathrooms.label(class="form-label") }}
+                {{ form.number_of_bathrooms(class="form-control") }}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            {{ form.price.label(class="form-label") }}
+            {{ form.price(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.location.label(class="form-label") }}
+            {{ form.location(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.type.label(class="form-label") }}
+            {{ form.type(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.image.label(class="form-label") }}
+            {{ form.image(class="form-control-file") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}{% endblock %}

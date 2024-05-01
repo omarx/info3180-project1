@@ -4,10 +4,14 @@ Jinja2 Documentation:    https://jinja.palletsprojects.com/
 Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file contains the routes for your application.
 """
+import os
 
 from app import app
-from flask import render_template, request, redirect, url_for
-
+from flask import render_template, request, redirect, url_for, flash
+from werkzeug.utils import secure_filename
+from app.form import AddPropertyForm
+from app.models import Properties,db
+from .config import Config
 
 ###
 # Routing for your application.
@@ -25,6 +29,41 @@ def about():
     return render_template('about.html', name="Mary Jane")
 
 
+@app.route('/new_property/', methods=['GET', 'POST'])
+def new_property():
+    form = AddPropertyForm()
+    if form.validate_on_submit():
+        filename = None
+        if form.image.data:
+            filename = secure_filename(form.image.data.filename)
+            form.image.data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        # Create a new Property instance
+        new_property = Properties(
+            title=form.property_name.data,
+            nofrooms=form.number_of_rooms.data,
+            nofbrooms=form.number_of_bathrooms.data,
+            location=form.location.data,
+            image=filename,  # store the filename, not the file
+            price=form.price.data,
+            description=form.description.data,
+            type=form.type.data
+        )
+
+        # Add the new property to the database
+        db.session.add(new_property)
+        db.session.commit()
+
+        flash('Property successfully added', 'success')
+        return redirect(url_for('home'))  # Redirect to a home page or other appropriate route
+
+    return render_template('create_property.html', form=form)
+
+@app.route('/properties/')
+def properties():
+    return render_template('properties.html')
+
+
 ###
 # The functions below should be applicable to all Flask apps.
 ###
@@ -37,6 +76,7 @@ def flash_errors(form):
                 getattr(form, field).label.text,
                 error
             ), 'danger')
+
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
