@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block css %}{% endblock %}
+{% block main %}
+<div class="container property-container mt-4">
+<div class="row">
+<div class="card property-card ">
+    <img class="property-img" src="{{ url_for('uploaded_file', filename=property.image) }}" alt="Property image">
+</div>
+    <div class="card property-card">
+        <h1 class="card-title text-center p-3">{{ property.title }}</h1>
+        <div class="m-3">
+            <button class="btn card-price" data-price="{{ property.price }}"></button>
+            <button class="btn card-type">{{ property.type }}</button>
+        </div>
+        <p class="card-text">{{ property.description }}</p>
+        <div class="mb-3">
+            <span><i class="fa-solid fa-bed"></i> {{ property.nofrooms }} Bedrooms</span>
+            <span class="ml-3"><i class="fa-solid fa-shower"></i> {{ property.nofbrooms }} Bathrooms</span>
+        </div>
+        <p><i class="bi bi-geo-alt"></i> {{ property.location }}</p>
+        <button class="btn btn-normal">Email Realtor</button>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block js %}{% endblock %}

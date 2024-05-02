@@ -7,11 +7,12 @@ This file contains the routes for your application.
 import os
 
 from app import app
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, send_from_directory, abort
 from werkzeug.utils import secure_filename
 from app.form import AddPropertyForm
-from app.models import Properties,db
+from app.models import Properties, db
 from .config import Config
+
 
 ###
 # Routing for your application.
@@ -29,7 +30,29 @@ def about():
     return render_template('about.html', name="Mary Jane")
 
 
-@app.route('/new_property/', methods=['GET', 'POST'])
+# Route for listing properties
+@app.route('/properties/')
+def properties():
+    props = Properties.query.all()
+    print("Properties fetched:", props)
+    return render_template('properties.html', properties=props)
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+@app.route('/properties/<int:property_id>')
+def property_detail(property_id):
+    props = Properties.query.get(property_id)
+    if props is None:
+        abort(404)
+    return render_template('property.html', property=props)
+
+
+# Route for uploading new properties
+@app.route('/properties/create', methods=['GET', 'POST'])
 def new_property():
     form = AddPropertyForm()
     if form.validate_on_submit():
@@ -38,30 +61,22 @@ def new_property():
             filename = secure_filename(form.image.data.filename)
             form.image.data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        # Create a new Property instance
         new_property = Properties(
             title=form.property_name.data,
             nofrooms=form.number_of_rooms.data,
             nofbrooms=form.number_of_bathrooms.data,
             location=form.location.data,
-            image=filename,  # store the filename, not the file
+            image=filename,
             price=form.price.data,
             description=form.description.data,
             type=form.type.data
         )
-
-        # Add the new property to the database
         db.session.add(new_property)
         db.session.commit()
-
         flash('Property successfully added', 'success')
-        return redirect(url_for('home'))  # Redirect to a home page or other appropriate route
+        return redirect(url_for('home'))
 
     return render_template('create_property.html', form=form)
-
-@app.route('/properties/')
-def properties():
-    return render_template('properties.html')
 
 
 ###

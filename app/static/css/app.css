@@ -16,3 +16,42 @@ body {
     margin-bottom: 20px;
     text-align: center;
 }
+
+.card{
+    width:30vw;
+}
+.card-price{
+    background-color:#99c5fc;
+    border-radius: 20px;
+    color:white;
+}
+
+.view-property{
+    background-color: #14b8a6;
+    color: white;
+    border-radius: 0;
+    height:7vh;
+    font-size:1.2em;
+
+}
+.property-img{
+    width:100%;
+
+}
+.property-container{
+    width:100%;
+}
+.property-card{
+    width:50%;
+}
+.card-type{
+    background-color:#fabf24;
+    border-radius: 20px;
+    color:white;
+}
+.btn-normal{
+    background-color: #14b8a6;
+    color:white;
+    padding:10px;
+    width:20%;
+}
